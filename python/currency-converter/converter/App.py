@@ -5,6 +5,7 @@ class App:
     base_currency = None
     target_currency = None
     amount = None
+    ratio = None
 
     def __init__(self, command_arguments):
         self.amount = command_arguments[1]
@@ -13,7 +14,10 @@ class App:
 
     def get_result_equation(self):
         base_currency_amount = str(self.amount) + " " + str(self.base_currency)
-        target_currency_amount = str(self.get_ratio() * float(self.amount)) + " " + self.target_currency
+        self.ratio = self.get_ratio()
+        if self.ratio is None:
+            return "Ratio not found, check if you entered correct currencies."
+        target_currency_amount = str(self.ratio * float(self.amount)) + " " + self.target_currency
         return base_currency_amount + " = " + target_currency_amount
 
     def get_ratio(self):

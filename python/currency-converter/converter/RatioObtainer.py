@@ -8,15 +8,14 @@ class RatioObtainer:
     def __init__(self, base, target, ratios_path='./ratios.json'):
         self.base = base
         self.target = target
-        self.ratios_path = ratios_path
+        self.ratios_path = ratios_path  # path to file with ratios
 
     def was_ratio_saved_today(self):
-        # TODO
         # This function checks if given ratio was saved today and if the file with ratios is created at all
         # should return false when file doesn't exist or if there's no today's exchange rate for given values at all
         # should return true otherwise
 
-        # check if file ./ratios.json exists, if not create it
+        # check if file ./ratios.json exists, if not create it and return False
         if not os.path.exists(self.ratios_path):
             with open(self.ratios_path, 'w') as file:
                 json.dump([], file)
@@ -24,7 +23,6 @@ class RatioObtainer:
 
         with open(self.ratios_path, 'r') as file:
             ratios = json.load(file)
-            # print(ratios)
             for entry in ratios:
                 if entry['base_currency'] == self.base and entry['target_currency'] == self.target:
                     if entry['date_fetched'] == datetime.date.today().strftime('%Y-%m-%d'):
@@ -33,20 +31,20 @@ class RatioObtainer:
             return False
 
     def fetch_ratio(self):
-        # TODO
         # This function calls API for today's exchange ratio
         # Should ask API for today's exchange ratio with given base and target currency
         # and call save_ratio method to save it
         
-        print(f'Fetching ratio for {self.base} to {self.target}...')
         url = f'https://api.exchangerate.host/convert?from={self.base}&to={self.target}'
+        print(f'Fetching ratio for {self.base} to {self.target}...')
         response = requests.get(url)
-        data = response.json()
+        ratio = response.json()['result']
+        if ratio is None:
+            return
 
-        self.save_ratio(data['result'])
+        self.save_ratio(ratio)
 
     def save_ratio(self, ratio):
-        # TODO
         # Should save or update exchange rate for given pair in json file
         # takes ratio as argument
         # example file structure is shipped in project's directory, yours can differ (as long as it works)
@@ -73,7 +71,6 @@ class RatioObtainer:
 
 
     def get_matched_ratio_value(self):
-        # TODO
         # Should read file and receive exchange rate for given base and target currency from that file
         
         with open(self.ratios_path, 'r') as file:
@@ -81,3 +78,4 @@ class RatioObtainer:
             for ratio in ratios:
                 if ratio['base_currency'] == self.base and ratio['target_currency'] == self.target:
                     return ratio['ratio']
+            return None
