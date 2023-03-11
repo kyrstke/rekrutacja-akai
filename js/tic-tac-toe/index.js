@@ -3,6 +3,9 @@ let symbols = [["", "", ""], ["", "", ""], ["", "", ""]];
 
 const board = document.querySelector(".board");
 const tiles = Array.from(document.querySelectorAll(".tile"));
+const resetBtn = document.querySelector(".reset");
+
+resetBtn.addEventListener("click", reset);
 
 board.addEventListener("click", ({ target }) => {
   const classes = Array.from(target.classList);
@@ -20,14 +23,37 @@ board.addEventListener("click", ({ target }) => {
 });
 
 function displayTurn(turn) {
-  // 1. zmień text elementu h1 z klasą "turn" zależnie od tego, czyja jest aktualnie tura
+  const turn_text = document.querySelector(".turn");
+  turn_text.innerText = `${turn.toUpperCase()} turn`;
 }
 
 function checkWin() {
-  // 2. sprawdź czy któryś z graczy wygrał pojedynek - jeśli tak wyświetla komunikat (możesz użyć np. funkcji "alert(...)")
+  let win = false;
+  symbols.forEach((row) => {
+    if (row.every((symbol) => symbol === "x")) win = true;
+  });
+  symbols.forEach((row) => {
+    if (row.every((symbol) => symbol === "o")) win = true;
+  });
+  for (let i = 0; i < 3; i++) {
+    if (symbols[0][i] !== "" && symbols[0][i] === symbols[1][i] && symbols[1][i] === symbols[2][i])
+      win = true;
+  }
+  if (symbols[0][0] !== "" && symbols[0][0] === symbols[1][1] && symbols[1][1] === symbols[2][2])
+    win = true;
+  if (symbols[0][2] !== "" && symbols[0][2] === symbols[1][1] && symbols[1][1] === symbols[2][0])
+    win = true;
+  if (win) {
+    alert(turn === "x" ? "o" : "x" + " won!");
+  }
+  else if (symbols.every((row) => row.every((symbol) => symbol !== ""))) {
+    alert("Draw!");
+  }
 }
 
-// 3. dodaj listener pod przycisk z napisaem "reset" tak, aby po jego kliknięciu wywołać funkcję reset
 function reset() {
-  // 4. zresetuj stan gry
+  turn = "x";
+  symbols = [["", "", ""], ["", "", ""], ["", "", ""]];
+  tiles.forEach((tile) => tile.classList.remove("tile-x", "tile-o"));
+  displayTurn(turn);
 }
