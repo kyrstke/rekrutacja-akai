@@ -14,5 +14,9 @@
   {
     "content": "wykąpać się",
     "done": true
+  },
+  {
+    "content": "posprzątać",
+    "done": false
   }
 ]
