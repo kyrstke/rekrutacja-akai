@@ -8,11 +8,36 @@
 const pokemonsContainer = document.querySelector(".pokemons");
 
 function renderPokemons(pokemons) {
-  // uzupełnij tutaj
+  for (pokemon of pokemons) {
+    // tutaj możesz stworzyć nowy element drzewa DOM, który będzie reprezentował pokemona
+    // możesz go umieścić w zmiennej, aby móc go potem dodać do DOM
+    const pokemonElement = document.createElement("div");
+    pokemonElement.classList.add("pokemon");
+    for (type of pokemon.types) {
+      pokemonElement.classList.add(type);
+    }
+    pokemonElement.innerHTML = `
+      <div class="pokemon-image">
+        <img src="${pokemon.image}" alt="${pokemon.name}" />
+      </div>
+      <div class="pokemon-info">
+        <h2 class="pokemon-name">${pokemon.name}</h2>
+        <div class="pokemon-types">
+          ${pokemon.types
+            .map((type) => `<span class="pokemon-type">${type}</span>`)
+            .join(", ")}
+        </div>
+      </div>
+    `;
+
+
+    // dodaj nowo utworzony element do sekcji pokemonsContainer
+    pokemonsContainer.appendChild(pokemonElement);
+  }
 }
 
 // następnie wykonaj uzupełnioną metodę z tablicą pokemons, aby sprawdzić czy wszystko działa
-// renderPokemons(pokemons);
+renderPokemons(pokemons);
 
 /*
   2. Przeglądanie całej listy pokemonów może okazać się trochę uciążliwe. Fajnie byłoby skorzystać z filtrów, które już znajdują sie w pliku html. 
@@ -21,17 +46,35 @@ function renderPokemons(pokemons) {
   - filtrowanie po nazwie (wpisany fragment zawiera się w nazwie pokemona)
 */
 
-function filterPokemons(pokemons) {
-  // uzupełnij tutaj
-  // zwróć odfiltrowaną tablicę pokemonów
+function filterPokemons(pokemons, types, name) {
+  // tutaj możesz napisać kod, który będzie filtrował tablicę pokemons
+  // zwróć nową tablicę, która będzie zawierała tylko te elementy, które spełniają warunki podane w parametrach
+  const filteredPokemons = pokemons.filter((pokemon) => {
+    const isTypeMatch = types.length
+      ? pokemon.types.some((type) => types.includes(type))
+      : true;
+    const isNameMatch = pokemon.name
+      .toLowerCase()
+      .includes(name.toLowerCase());
+    return isTypeMatch && isNameMatch;
+  });
+  return filteredPokemons;
 }
 
 const form = document.querySelector("form");
 
 function submitForm(event) {
   event.preventDefault();
-  // następnie wykonaj uzupełnioną metodę z tablicą pokemons, aby sprawdzić czy wszystko działa
-  // renderPokemons(filterPokemons(pokemons));
+  let types = [];
+  const typeInputs = document.querySelectorAll('input[type="checkbox"]');
+  for (typeInput of typeInputs) {
+    if (typeInput.checked) {
+      types.push(typeInput.id);
+    }
+  }
+  const pokemonName = document.querySelector('input[id="pokemon-name"]').value;
+  pokemonsContainer.innerHTML = "";
+  renderPokemons(filterPokemons(pokemons, types, pokemonName));
 }
 
 form.addEventListener("submit", submitForm);

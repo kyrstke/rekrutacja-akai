@@ -10,8 +10,9 @@
   <body>
     <main>
       <section class="filters">
-        <h1>Pokedex</h1>
+        <h1 class="title">Pokedex</h1>
         <form id="form-filters">
+          <div class="type-filters">
             <label><input id="grass" type="checkbox" checked/><span>grass</span></label>
             <label><input id="poison" type="checkbox" checked/><span>poison</span></label>
             <label><input id="fire" type="checkbox" checked/><span>fire</span></label>
@@ -29,7 +30,8 @@
             <label><input id="ice" type="checkbox" checked/><span>ice</span></label>
             <label><input id="ghost" type="checkbox" checked/><span>ghost</span></label>
             <label><input id="dragon" type="checkbox" checked/><span>dragon</span></label>
-          <div>
+          </div>
+          <div class="text-filter">
             <input id="pokemon-name" type="text" placeholder="Pokemon name" />
             <button type="submit">Filter</button>
           </div>
